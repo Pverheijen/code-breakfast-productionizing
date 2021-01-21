@@ -15,12 +15,32 @@ spec:
         app: titanic # What is template?
     spec:
       containers:
-        - name: app
+        - name: titanic
           image: "eu.gcr.io/xccel-266717/titanic:v1"
+          args: []
+          ports:
+              - containerPort: 5000
           volumeMounts:
-            - mountPath: /data
-              name: redis-volume
+            - mountPath: /model
+              name: model
+      initContainers:
+        - name: titanic-download-model
+          image: "eu.gcr.io/xccel-266717/titanic:v1"
+          command: ["titanic", "download-data",
+                    "--gcp-path",
+                    "gs://titanic-xcc-model-deployment/model/model.pkl" ,
+                    "--output-path", "/model/model.pkl", "--auth-key-path",
+                    "/secret/read"
+                    ] # command is going to override everything, entrypoint + cmd, else just args? (that takes entrypoint from Dockerfile)
+          volumeMounts:
+            - mountPath: /secret
+              name: gcp-secret-getter
+            - mountPath: /model
+              name: model
       volumes:
-        - name: redis-volume
-          persistentVolumeClaim:
-            claimName: redis-pvc
+      - name: gcp-secret-getter
+        secret:
+            secretName: storage-key
+      - name: model
+        emptyDir: {}
+
