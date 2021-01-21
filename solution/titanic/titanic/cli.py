@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from google.cloud import storage
 
 """Console script for titanic."""
 
@@ -19,6 +20,18 @@ def cli():
     Provides commands for fitting models and producing predictions, as well as
     for exposing models in a Flask-based REST API.
     """
+
+
+@cli.command()
+@click.option("--gcp-path", required=True)
+@click.option("--output-path", required=True)
+@click.option("--auth-key-path", required=True)
+def download_data(gcp_path, output_path, auth_key_path):
+    """Downloads data from GCP."""
+    client = storage.Client.from_service_account_json(json_credentials_path=auth_key_path)
+
+    with open(output_path, "wb") as output_file:
+        client.download_blob_to_file(gcp_path, output_file)
 
 
 @cli.command()

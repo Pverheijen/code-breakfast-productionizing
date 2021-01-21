@@ -13,7 +13,14 @@ with open("README.rst") as readme_file:
 with open("HISTORY.rst") as history_file:
     history = history_file.read()
 
-requirements = ["Click>=6.0", "pandas", "scikit-learn>=0.21.0", "flask", "joblib"]
+requirements = [
+    "Click>=6.0",
+    "pandas",
+    "scikit-learn",
+    "flask",
+    "joblib",
+    "google-cloud-storage",
+]
 
 extra_requirements = {
     "dev": [
