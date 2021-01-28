@@ -21,7 +21,7 @@ class Scorer(Flask):
 
     def ping(self):
         """Heartbeat endpoint."""
-        return "pong", 200
+        return "do not ping me.", 200
 
     def fit(self):
         """Fit endpoint, that re-trains the existing model."""

@@ -1,25 +1,25 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: titanic
+  name: titanic-v2
   labels:
     app: titanic
-    version: v1
+    version: v2
 spec:
   replicas: 1
   selector:
     matchLabels:
       app: titanic
-      version: v1
+      version: v2
   template:
     metadata:
       labels:
         app: titanic # What is template?
-        version: v1
+        version: v2
     spec:
       containers:
         - name: titanic
-          image: "eu.gcr.io/xccel-266717/titanic:v1"
+          image: "eu.gcr.io/xccel-266717/titanic:v2"
           args: []
           ports:
               - containerPort: 5000
@@ -46,4 +46,3 @@ spec:
             secretName: storage-key
       - name: model
         emptyDir: {}
-

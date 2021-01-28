@@ -1,0 +1,16 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: titanic
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /v1/*
+        backend:
+          serviceName: model-service
+          servicePort: 5000
+      - path: /v2/*
+        backend:
+          serviceName: model-service-v2
+          servicePort: 5000
