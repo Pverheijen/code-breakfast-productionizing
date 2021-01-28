@@ -1,0 +1,51 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: retrain-model-cron-job
+spec:
+  schedule: "@hourly"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: titanic-train
+            image: eu.gcr.io/xccel-266717/titanic:v2
+            imagePullPolicy: IfNotPresent
+            command: [
+                "titanic", "download-data", "--gcp-path", "gs://titanic-xcc-model-deployment/data/train.csv",
+                "--output-path", "cron/cron_train.csv", "--auth-key-path",
+                "/secret/read"]
+            volumeMounts:
+                - mountPath: /secret
+                  name: gcp-secret-getter
+                - mountPath: /model
+                  name: model
+                - mountPath: /cron
+                  name: cron
+          volumes:
+           - name: gcp-secret-getter
+             secret:
+              secretName: storage-key
+           - name: model
+             emptyDir: {}
+           - name: cron
+             persistentVolumeClaim:
+                 claimName: cron
+          restartPolicy: OnFailure
+
+
+
+
+
+                 # ";",
+              #  "titanic", "fit", "dataset_path=/data/cron_train.csv", "--output-path", "/model/model_cron.pkl"
+             #   ]  # command is going to override everything, entrypoint + cmd, else just args? (that takes entrypoint from Dockerfile)
+
+
+          #"titanic", "download-data",
+                    # "--gcp-path",
+                    # "gs://titanic-xcc-model-deployment/model/model.pkl" ,
+                    # "--output-path", "/model/model.pkl", "--auth-key-path",
+                    # "/secret/read"
+                    # ]
